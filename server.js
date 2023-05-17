@@ -72,7 +72,6 @@ passport.use(
     async (username, password, done) => {
       try {
         const student = await Student.findOne({ email: username });
-        console.log(student);
         if (student === null) {
           return done(null, false, {
             message: "No user found with that email",
@@ -100,18 +99,17 @@ passport.use(
     async (username, password, done) => {
       try {
         const teacher = await Teacher.findOne({ email: username });
-        console.log(teacher);
+        console.log(teacher)
         if (teacher === null) {
           return done(null, false, {
             message: "No user found with that email",
           });
         }
-        if (!(password === teacher.password)) {
-          return done(null, false, {
-            message: "Incorrect password",
-          });
+        if (password === teacher.password) {
+          return done(null, teacher);
+        } else {
+          return done(null, false, { message: "Password Incorrect" });
         }
-        return done(null, teacher);
       } catch (error) {
         return done(error);
       }
@@ -243,3 +241,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+
+//Author : Manish Choudhary
