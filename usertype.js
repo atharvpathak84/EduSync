@@ -34,7 +34,7 @@ const studentSchema = new mongoose.Schema({
   password: String,
 });
 
-const Student = mongoose.model("Student", studentSchema, 'teachers');
+const Student = mongoose.model("Student", studentSchema, "teachers");
 
 // Define Teacher schema and model
 const teacherSchema = new mongoose.Schema({
@@ -42,7 +42,7 @@ const teacherSchema = new mongoose.Schema({
   password: String,
 });
 
-const Teacher = mongoose.model('Teacher', teacherSchema, 'schedules');
+const Teacher = mongoose.model("Teacher", teacherSchema, "schedules");
 
 // studentSchema.methods.comparePassword = function (password) {
 //   // Compare the provided password with the stored password
@@ -66,8 +66,10 @@ passport.use(
       try {
         const student = await Student.findOne({ email: username });
         console.log(student);
-        if (student === null){
-          return done(null, false, {message: "No user found with that email"})
+        if (student === null) {
+          return done(null, false, {
+            message: "No user found with that email",
+          });
         }
         if (!(password === student.password)) {
           return done(null, false, {
@@ -93,8 +95,10 @@ passport.use(
       try {
         const teacher = await Teacher.findOne({ email: username });
         console.log(teacher);
-        if (teacher === null){
-          return done(null, false, {message: "No user found with that email"})
+        if (teacher === null) {
+          return done(null, false, {
+            message: "No user found with that email",
+          });
         }
         if (!(password === teacher.password)) {
           return done(null, false, {
@@ -162,21 +166,23 @@ app.post(
   })
 );
 
-app.get('/dashboard', (req, res) => {
+app.get("/dashboard", (req, res) => {
   if (req.isAuthenticated()) {
     if (req.user instanceof Student) {
       // Render student dashboard
-      res.render("student")
+      res.render("student");
     } else if (req.user instanceof Teacher) {
       // Render teacher dashboard
-      res.send(`Welcome Teacher: ${req.user.email}. This is the teacher dashboard.`);
+      res.send(
+        `Welcome Teacher: ${req.user.email}. This is the teacher dashboard.`
+      );
     } else {
       // User type not recognized
-      res.status(400).send('Invalid user type');
+      res.status(400).send("Invalid user type");
     }
   } else {
     // User not authenticated, redirect to login
-    res.redirect('/login');
+    res.redirect("/login");
   }
 });
 
@@ -186,7 +192,6 @@ app.delete("/logout", (req, res) => {
     res.redirect("/login");
   });
 });
-
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

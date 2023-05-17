@@ -15,16 +15,16 @@ const mongoose = require("mongoose");
 const ChannelModel = require("./models/channel");
 
 initializePassport(
-  passport,
-  (email) => ChannelModel.findOne({email : email}),
-  (id) => ChannelModel.findOne({id : id})
+  passport,uio
+  (email) => ChannelModel.findOne({ email: email }),
+  (id) => ChannelModel.findOne({ id: id })
 );
 
 //to use images of root directories
-app.use( express.static( "views" ) );
+app.use(express.static("views"));
 
 // set the view engine to ejs
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -82,15 +82,15 @@ app.post("/register", checkNotAuthenticated, async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     var model = new ChannelModel();
-      (model.name = req.body.name),
+    (model.name = req.body.name),
       (model.email = req.body.email),
       (model.password = hashedPassword);
-      (model.id = Date.now().toString())
+    model.id = Date.now().toString();
 
     model
       .save()
       .then(() => {
-        console.log("User added to the database")
+        console.log("User added to the database");
       })
       .catch((err) => {
         console.log(err);
@@ -108,7 +108,7 @@ app.get("/index", checkAuthenticated, (req, res) => {
   res.render("index.ejs", { name: req.user.name });
 });
 
-app.get("/login", checkNotAuthenticated,async (req, res) => {
+app.get("/login", checkNotAuthenticated, async (req, res) => {
   res.render("login.ejs");
 });
 
@@ -152,4 +152,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
   console.log(`Server is running on port ${PORT}.`);
 });
-
