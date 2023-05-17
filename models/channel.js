@@ -24,8 +24,13 @@ const channelSchema = new mongoose.Schema({
         type:String,
         required:true,
         trim: true
-    }
+    },
 
+    userType:{
+        type:String,
+        require: true,
+        trim: true,
+    }
 });
 
 const ChannelModel = mongoose.model("teachers",channelSchema)
