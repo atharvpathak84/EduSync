@@ -7,6 +7,7 @@ const session = require("express-session");
 const app = express();
 const flash = require("express-flash");
 const methodOverride = require("method-override");
+const bcrypt = require("bcrypt"); // Importing bcrypt package
 
 //to use images of root directories
 app.use(express.static("views"));
@@ -71,12 +72,11 @@ passport.use(
             message: "No user found with that email",
           });
         }
-        if (!(password === student.password)) {
-          return done(null, false, {
-            message: "Incorrect password",
-          });
+        if (await bcrypt.compare(password, student.password)) {
+          return done(null, student);
+        } else {
+          return done(null, false, { message: "Password Incorrect" });
         }
-        return done(null, student);
       } catch (error) {
         return done(error);
       }

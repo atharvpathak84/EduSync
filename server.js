@@ -7,25 +7,17 @@ const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt"); // Importing bcrypt package
 const passport = require("passport");
-const initializePassport = require("./passport-config");
 const flash = require("express-flash");
 const session = require("express-session");
 const methodOverride = require("method-override");
 const mongoose = require("mongoose");
 const ChannelModel = require("./models/channel");
-
-initializePassport(
-  passport,uio
-  (email) => ChannelModel.findOne({ email: email }),
-  (id) => ChannelModel.findOne({ id: id })
-);
+const LocalStrategy = require("passport-local").Strategy;
 
 //to use images of root directories
 app.use(express.static("views"));
-
 // set the view engine to ejs
 app.set("view engine", "ejs");
-
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -52,6 +44,101 @@ mongoose
 // get a reference to the collection you want to export
 // const emailTeachers = mongoose.connection.collection(schedules);
 
+// Define Student schema and model
+const studentSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+});
+
+const Student = mongoose.model("Student", studentSchema, "teachers");
+
+// Define Teacher schema and model
+const teacherSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+});
+
+const Teacher = mongoose.model("Teacher", teacherSchema, "schedules");
+
+
+// Configure Passport
+passport.use(
+  "student",
+  new LocalStrategy(
+    {
+      usernameField: "email", // Assuming email as the username field
+      passwordField: "password", // Assuming password as the password field
+    },
+    async (username, password, done) => {
+      try {
+        const student = await Student.findOne({ email: username });
+        console.log(student);
+        if (student === null) {
+          return done(null, false, {
+            message: "No user found with that email",
+          });
+        }
+        if (await bcrypt.compare(password, student.password)) {
+          return done(null, student);
+        } else {
+          return done(null, false, { message: "Password Incorrect" });
+        }
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  "teacher",
+  new LocalStrategy(
+    {
+      usernameField: "email", // Assuming email as the username field
+      passwordField: "password", // Assuming password as the password field
+    },
+    async (username, password, done) => {
+      try {
+        const teacher = await Teacher.findOne({ email: username });
+        console.log(teacher);
+        if (teacher === null) {
+          return done(null, false, {
+            message: "No user found with that email",
+          });
+        }
+        if (!(password === teacher.password)) {
+          return done(null, false, {
+            message: "Incorrect password",
+          });
+        }
+        return done(null, teacher);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const student = await Student.findById(id);
+    if (student) {
+      return done(null, student);
+    }
+    const teacher = await Teacher.findById(id);
+    if (teacher) {
+      return done(null, teacher);
+    }
+    done(new Error("User not found"));
+  } catch (error) {
+    done(error);
+  }
+});
+
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(
@@ -68,24 +155,24 @@ app.use(methodOverride("_method"));
 // Configuring the register post functionality
 app.post(
   "/login",
-  checkNotAuthenticated,
-  passport.authenticate("local", {
-    successRedirect: "/index",
+  passport.authenticate(["student", "teacher"], {
+    successRedirect: "/dashboard",
     failureRedirect: "/login",
     failureFlash: true,
   })
 );
 
 // Configuring the register post functionality
-app.post("/register", checkNotAuthenticated, async (req, res) => {
+app.post("/register", async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     var model = new ChannelModel();
     (model.name = req.body.name),
       (model.email = req.body.email),
-      (model.password = hashedPassword);
-    model.id = Date.now().toString();
+      (model.password = hashedPassword),
+      (model.id = Date.now().toString()),
+      (model.userType = "student");
 
     model
       .save()
@@ -104,20 +191,38 @@ app.post("/register", checkNotAuthenticated, async (req, res) => {
 });
 
 // Routes
-app.get("/index", checkAuthenticated, (req, res) => {
+app.get("/index", (req, res) => {
   res.render("index.ejs", { name: req.user.name });
 });
 
-app.get("/login", checkNotAuthenticated, async (req, res) => {
+app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-app.get("/register", checkNotAuthenticated, (req, res) => {
+app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
-app.get("/", checkNotAuthenticated, (req, res) => {
+app.get("/", (req, res) => {
   res.render("home.ejs");
+});
+
+app.get("/dashboard", (req, res) => {
+  if (req.isAuthenticated()) {
+    if (req.user instanceof Student) {
+      // Render student dashboard
+      res.render("student");
+    } else if (req.user instanceof Teacher) {
+      // Render teacher dashboard
+      res.render("teacher_dashboard",{ name: req.user.name })
+    } else {
+      // User type not recognized
+      res.status(400).send("Invalid user type");
+    }
+  } else {
+    // User not authenticated, redirect to login
+    res.redirect("/login");
+  }
 });
 // End Routes
 
@@ -132,20 +237,6 @@ app.delete("/logout", (req, res) => {
     res.redirect("/login");
   });
 });
-
-function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
-}
-
-function checkNotAuthenticated(req, res, next) {
-  // if (req.isAuthenticated()) {
-  //   return res.redirect("/index");
-  // }
-  next();
-}
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
