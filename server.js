@@ -49,6 +49,9 @@ mongoose
     console.log("Error: ", e);
   });
 
+// get a reference to the collection you want to export
+// const emailTeachers = mongoose.connection.collection(schedules);
+
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(
@@ -79,7 +82,7 @@ app.post("/register", checkNotAuthenticated, async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     var model = new ChannelModel();
-    (model.name = req.body.name),
+      (model.name = req.body.name),
       (model.email = req.body.email),
       (model.password = hashedPassword);
       (model.id = Date.now().toString())
@@ -105,7 +108,7 @@ app.get("/index", checkAuthenticated, (req, res) => {
   res.render("index.ejs", { name: req.user.name });
 });
 
-app.get("/login", checkNotAuthenticated, (req, res) => {
+app.get("/login", checkNotAuthenticated,async (req, res) => {
   res.render("login.ejs");
 });
 
@@ -126,7 +129,7 @@ app.get("/", checkNotAuthenticated, (req, res) => {
 app.delete("/logout", (req, res) => {
   req.logout(req.user, (err) => {
     if (err) return next(err);
-    res.redirect("/");
+    res.redirect("/login");
   });
 });
 
@@ -144,9 +147,9 @@ function checkNotAuthenticated(req, res, next) {
   next();
 }
 
-// // set port, listen for requests
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, function () {
-//   console.log(`Server is running on port ${PORT}.`);
-// });
+// set port, listen for requests
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, function () {
+  console.log(`Server is running on port ${PORT}.`);
+});
 

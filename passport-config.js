@@ -1,6 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy
 const bcrypt = require("bcrypt")
-const ChannelModel = require("./models/channel");
+const ChannelModel = require("./models/channel");   
 
 function initialize(passport, getUserByEmail, getUserById){
     // Function to authenticate users
