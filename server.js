@@ -13,6 +13,7 @@ const methodOverride = require("method-override");
 const mongoose = require("mongoose");
 const ChannelModel = require("./models/channel");
 const LocalStrategy = require("passport-local").Strategy;
+const { MongoClient } = require('mongodb');
 
 //to use images of root directories
 app.use(express.static("views"));
@@ -31,6 +32,7 @@ const connectionParams = {
   useUnifiedTopology: true,
 };
 
+
 //connection to MongoDb Atlas
 mongoose
   .connect(dbUrl, connectionParams)
@@ -40,6 +42,9 @@ mongoose
   .catch((e) => {
     console.log("Error: ", e);
   });
+
+//connection for student dashboard
+const client = new MongoClient(dbUrl);
 
 // get a reference to the collection you want to export
 // const emailTeachers = mongoose.connection.collection(schedules);
@@ -74,7 +79,7 @@ passport.use(
         const student = await Student.findOne({ email: username });
         if (student === null) {
           return done(null, false, {
-            message: "No user found with that email",
+            message: "Invalid Credentials !!!",
           });
         }
         if (await bcrypt.compare(password, student.password)) {
@@ -101,9 +106,7 @@ passport.use(
         const teacher = await Teacher.findOne({ email: username });
         console.log(teacher)
         if (teacher === null) {
-          return done(null, false, {
-            message: "No user found with that email",
-          });
+          return done(null, false);
         }
         if (password === teacher.password) {
           return done(null, teacher);
@@ -164,22 +167,25 @@ app.post(
 app.post("/register", async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    var model = new ChannelModel();
-    (model.name = req.body.name),
+    const userPresent = await ChannelModel.countDocuments({email:req.body.email},{limit:1});
+    console.log(userPresent)
+    if(!userPresent){
+      var model = new ChannelModel();
+      (model.name = req.body.name),
       (model.email = req.body.email),
       (model.password = hashedPassword),
       (model.id = Date.now().toString()),
       (model.userType = "student");
 
-    model
-      .save()
-      .then(() => {
-        console.log("User added to the database");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      model
+        .save()
+        .then(() => {
+          console.log("User added to the database");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
 
     res.redirect("/login");
   } catch (e) {
@@ -189,28 +195,33 @@ app.post("/register", async (req, res) => {
 });
 
 // Routes
-app.get("/index", (req, res) => {
-  res.render("index.ejs", { name: req.user.name });
-});
-
 app.get("/login", (req, res) => {
-  res.render("login.ejs");
-});
-
-app.get("/register", (req, res) => {
-  res.render("register.ejs");
+  res.render("loginr.ejs");
 });
 
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-app.get("/dashboard", (req, res) => {
+app.get("/dashboard",async (req, res) => {
   if (req.isAuthenticated()) {
     if (req.user instanceof Student) {
       // Render student dashboard
-      res.render("student");
-    } else if (req.user instanceof Teacher) {
+      try {
+        await client.connect();
+        const database = client.db('Login');
+        const collection = database.collection('datas');
+        const data = await collection.findOne();
+
+        res.render('student', {timetable: data.timetable});
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      } finally {
+        await client.close();
+      }
+    
+  } else if (req.user instanceof Teacher) {
       // Render teacher dashboard
       res.render("teacher_dashboard",{ name: req.user.name })
     } else {
