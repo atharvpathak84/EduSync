@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 // Importing Libraies that we installed using npm
 const express = require("express");
 const app = express();
@@ -104,7 +103,6 @@ passport.use(
     async (username, password, done) => {
       try {
         const teacher = await Teacher.findOne({ email: username });
-        console.log(teacher)
         if (teacher === null) {
           return done(null, false);
         }
@@ -194,14 +192,73 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Routes
-app.get("/login", (req, res) => {
-  res.render("loginr.ejs");
+//for accessing the form inputs for later use
+var dayInput1;
+var timeslotInput1;
+
+//finding teachers available from teacher dashboard
+app.post("/dashboard",async (req, res) => {
+  try{
+
+    const dayInput = req.body.day;
+    const timeslotInput = req.body.timeSlot;
+
+     dayInput1 = req.body.day;
+     timeslotInput1 = req.body.timeSlot;
+
+    await client.connect();
+    const database = client.db('Login');
+    const collection = database.collection('schedules');
+
+    //for teacher timetble
+    const database2 = client.db('Login');
+    const collection2 = database2.collection('schedules');
+    const data = await collection2.findOne({email:req.user.email});
+
+    const da = await collection.find({
+        [`lectures.${dayInput}.${timeslotInput}`]: {
+          "$exists": true
+        }
+      }).toArray();
+    
+    console.log(da);
+
+    res.render("teacher_dashboard.ejs",{name: req.user.email, timetable: data.lectures ,modalData : da})
+  } catch (e){
+    console.log(e);
+  }
 });
 
-app.get("/", (req, res) => {
-  res.render("home.ejs");
-});
+// Routes
+app.post("/modalForm",async (req,res)=>{
+  try{
+    const chosenOption = req.body.inlineFormCustomSelect;
+    console.log(req.body)
+    console.log('Chosen Option:', chosenOption);
+
+    await client.connect();
+    const database = client.db('Login');
+    const collection = database.collection('datas');
+
+    const result = await collection.findOneAndUpdate(
+      { 
+        [`timetable.${dayInput1}.${timeslotInput1}`]: { "$exists": true }
+      },
+      { 
+        $set: { [`timetable.${dayInput1}.${timeslotInput1}.TEACHER`]: chosenOption }
+      },
+      { 
+        returnOriginal: false 
+      }
+    );
+      
+   console.log(result);
+    
+   res.redirect("/dashboard");
+  }catch(e){
+    console.log(e);
+  }
+})
 
 app.get("/dashboard",async (req, res) => {
   if (req.isAuthenticated()) {
@@ -223,7 +280,20 @@ app.get("/dashboard",async (req, res) => {
     
   } else if (req.user instanceof Teacher) {
       // Render teacher dashboard
-      res.render("teacher_dashboard",{ name: req.user.name })
+      try {
+        await client.connect();
+        const database = client.db('Login');
+        const collection = database.collection('schedules');
+        const data = await collection.findOne({email:req.user.email});
+
+        res.render("teacher_dashboard",{ name: req.user.email, timetable: data.lectures ,modalData : null})
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      } finally {
+        await client.close();
+      }
+      
     } else {
       // User type not recognized
       res.status(400).send("Invalid user type");
@@ -233,6 +303,15 @@ app.get("/dashboard",async (req, res) => {
     res.redirect("/login");
   }
 });
+
+app.get("/login", (req, res) => {
+  res.render("loginr.ejs");
+});
+
+app.get("/", (req, res) => {
+  res.render("home.ejs");
+});
+
 // End Routes
 
 // app.delete('/logout', (req, res) => {

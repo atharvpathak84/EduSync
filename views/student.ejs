@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Student</title>
+    <link rel="stylesheet" href="styles1.css">
+    <!-- <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script> -->
 
     <style>
       table {
@@ -16,8 +18,9 @@
       th,
       td {
         padding: 8px;
-        text-align: left;
+        text-align: center;
         border-bottom: 1px solid #ddd;
+
       }
     </style>
     <link
@@ -39,10 +42,10 @@
     </form>
 
     <h1>Timetable</h1>
-    <table class="table-bordered">
-      <tr>
-        <th>Time Slot</th>
-        <th>Subject</th>
+    <table class="table-bordered w-75 mx-auto  ">
+      <tr class="text-center ">
+        <th class="time text-center text-justify">Time Slot</th>
+        <th class="sub text-center">Subject</th>
       </tr>
       <% const currentDate=new Date(); %> <% const options={ weekday: 'long' };
       %> <% const currentDay=currentDate.toLocaleDateString('en-US',
