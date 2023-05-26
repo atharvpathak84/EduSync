@@ -52,10 +52,27 @@
       <p class="lead text-dark">Welcome to Teacher Dashboard</p>
 
       <form method="POST" action="/dashboard" class="form-control" id="findSubs">
-        <label for="day">day :</label>
-        <input type="text" id="day" name="day" /><br /><br />
-        <label for="timeSlot">timeslot :</label>
-        <input type="text" id="timeSlot" name="timeSlot" /><br /><br />
+        <label for="day">Day:</label>
+  <select id="day" name="day">
+    <option value="mon">Monday</option>
+    <option value="tue">Tuesday</option>
+    <option value="wed">Wednesday</option>
+    <option value="thu">Thursday</option>
+    <option value="fri">Friday</option>
+
+    <!-- Add more options for other days -->
+  </select><br /><br />
+
+  <label for="timeSlot">Timeslot:</label>
+  <select id="timeSlot" name="timeSlot">
+    <option value="9-10 AM">9-10 AM</option>
+    <option value="10-11 AM">10-11 AM</option>
+    <option value="11:30-12:30 PM">11:30-12:30 PM</option>
+    <option value="12:30-1:30 PM">12:30-1:30 PM</option>
+    <option value="2:15-4:15 PM">2:15-4:15 PM</option>
+    <!-- Add more options for other timeslots -->
+  </select><br /><br />
+
 
         <button type="submit" class="btn btn-dark" id="submitbtn">Find Substitutions</button>
 
