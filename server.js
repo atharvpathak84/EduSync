@@ -45,9 +45,6 @@ mongoose
 //connection for student dashboard
 const client = new MongoClient(dbUrl);
 
-// get a reference to the collection you want to export
-// const emailTeachers = mongoose.connection.collection(schedules);
-
 // Define Student schema and model
 const studentSchema = new mongoose.Schema({
   email: String,
@@ -196,29 +193,6 @@ app.post("/register", async (req, res) => {
 var dayInput1;
 var timeslotInput1;
 
-//finding teachers available from teacher dashboard
-// app.post("/dashboard", async (req, res) => {
-//   try {
-//     const dayInput = req.body.day;
-//     const timeslotInput = req.body.timeSlot;
-
-//     await client.connect();
-//     const database = client.db('Login');
-//     const collection = database.collection('schedules');
-
-//     const data = await collection.find({
-//       [`lectures.${dayInput}.${timeslotInput}`]: {
-//         "$exists": true
-//       }
-//     }).toArray();
-
-//     console.log(data);
-//     res.json(data);
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
 app.post("/dashboard", async function(req, res) {
   try {
     const dayInput = req.body.day;
@@ -228,7 +202,6 @@ app.post("/dashboard", async function(req, res) {
     timeslotInput1 = timeslotInput;
 
     // Perform necessary operations with dayInput and timeslotInput
-
     // Retrieve modal data from the backend
     const modalData = await fetchModalData(dayInput, timeslotInput);
 
@@ -261,8 +234,6 @@ async function fetchModalData(dayInput, timeslotInput) {
     return null;
   }
 }
-
-
 
 // Routes
 app.post("/modalForm",async (req,res)=>{
@@ -347,12 +318,6 @@ app.get("/", (req, res) => {
 });
 
 // End Routes
-
-// app.delete('/logout', (req, res) => {
-//     req.logOut()
-//     res.redirect('/login')
-//   })
-
 app.delete("/logout", (req, res) => {
   req.logout(req.user, (err) => {
     if (err) return next(err);
