@@ -304,7 +304,7 @@ app.get("/dashboard",async (req, res) => {
         const collection = database.collection('datas');
         const data = await collection.findOne();
 
-        res.render('student', {timetable: data.timetable});
+        res.render('studentd', {timetable: data.timetable});
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -320,7 +320,7 @@ app.get("/dashboard",async (req, res) => {
         const collection = database.collection('schedules');
         const data = await collection.findOne({email:req.user.email});
         
-        res.render("teacher_dashboard",{ name: data.name, timetable: data.lectures ,modalData : null})
+        res.render("teacherdbsh",{ name: data.name, timetable: data.lectures ,modalData : null})
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -343,7 +343,7 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("home.ejs");
+  res.render("index.ejs");
 });
 
 // End Routes
