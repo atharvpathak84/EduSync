@@ -37,11 +37,7 @@
       <div>
         <h3 class="float-md-start mb-0 text-dark">EduSync</h3>
         <nav class="nav nav-masthead justify-content-center float-md-end">
-          <form id="myForm" action="/logout?_method=DELETE" method="POST">
-            <button class="nav-link fw-bold py-1 px-0 btn p=3 btn-dark text-white" type="submit">
-              Logout
-            </button>
-          </form>
+          <a href="#" onclick="submitForm()">logout</a>
         </nav>
       </div>
     </header>
@@ -51,34 +47,28 @@
       </h1>
       <p class="lead text-dark">Welcome to Teacher Dashboard</p>
 
-      <form method="POST" action="/dashboard" class="form-control" id="findSubs">
+      <form method="POST" action="/dashboard" class="form-control" id="findSubsForm">
         <label for="day">Day:</label>
-  <select id="day" name="day">
-    <option value="mon">Monday</option>
-    <option value="tue">Tuesday</option>
-    <option value="wed">Wednesday</option>
-    <option value="thu">Thursday</option>
-    <option value="fri">Friday</option>
-
-    <!-- Add more options for other days -->
-  </select><br /><br />
-
-  <label for="timeSlot">Timeslot:</label>
-  <select id="timeSlot" name="timeSlot">
-    <option value="9-10 AM">9-10 AM</option>
-    <option value="10-11 AM">10-11 AM</option>
-    <option value="11:30-12:30 PM">11:30-12:30 PM</option>
-    <option value="12:30-1:30 PM">12:30-1:30 PM</option>
-    <option value="2:15-4:15 PM">2:15-4:15 PM</option>
-    <!-- Add more options for other timeslots -->
-  </select><br /><br />
-
-
-        <button type="submit" class="btn btn-dark" id="submitbtn">Find Substitutions</button>
-
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-          Select Teacher for Substitution
-        </button>
+        <select id="day" name="day">
+          <!-- Options for days -->
+          <option value="mon">Monday</option>
+        <option value="tue">Tuesday</option>
+        <option value="wed">Wednesday</option>
+        <option value="thu">Thursday</option>
+        <option value="fri">Friday</option>
+        </select><br /><br />
+      
+        <label for="timeSlot">Timeslot:</label>
+        <select id="timeSlot" name="timeSlot">
+          <!-- Options for timeslots -->
+          <option value="9-10 AM">9-10 AM</option>
+        <option value="10-11 AM">10-11 AM</option>
+        <option value="11:30-12:30 PM">11:30-12:30 PM</option>
+        <option value="12:30-1:30 PM">12:30-1:30 PM</option>
+        <option value="2:15-4:15 PM">2:15-4:15 PM</option>
+        </select><br /><br />
+      
+        <button type="submit" class="btn btn-dark" id="findSubstitutionsBtn">Find Substitutions</button>
       </form>
 
       
@@ -113,6 +103,11 @@
             </table>
 
             <footer class="mt-auto text-dark-50">
+              <form id="myForm" action="/logout?_method=DELETE" method="POST" style="display: none;">
+                <button class="nav-link fw-bold py-1 px-0 btn p=3 btn-dark text-white" type="submit">
+                  Logout
+                </button>
+              </form>
               <p class="text-dark">
                 EduSync <a href="" class="text-dark">Copyright</a>
               </p>
@@ -120,17 +115,11 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">
-            Available Teachers
-          </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h4 class="modal-title">Modal Title</h4>
         </div>
         <div class="modal-body">
           <form action="/modalForm" method="POST" class="row">
@@ -139,16 +128,7 @@
                 <label for="inlineFormCustomSelect">Preference</label>
                 <select class="custom-select" id="inlineFormCustomSelect" name="inlineFormCustomSelect">
                   <option selected>Choose...</option>
-                  
-                  <% if (modalData != null) { %>
-                    <% modalData.forEach((ob)=>{ %>
-                      <option value="<%=  ob.name  %>"> 
-                      <%=  ob.name  %>
-                     </option>
-              
-                      <% }) %>
-                    <% } %>
-
+                  <!-- Options populated dynamically based on modalData -->
                 </select>
               </div>
             </div>
@@ -171,7 +151,7 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
 
-    <a href="#" onclick="submitForm()">Click here to logout</a>
+    
 
 <script>
   function submitForm() {
@@ -182,6 +162,65 @@
     form.submit();
   }
 </script>
+
+<script>
+  // Event listener for form submission
+  document.getElementById("findSubsForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Get the selected day and timeslot
+    var dayInput = document.getElementById("day").value;
+    var timeslotInput = document.getElementById("timeSlot").value;
+
+    // Fetch modal data dynamically based on dayInput and timeslotInput
+    fetchModalData(dayInput, timeslotInput)
+      .then(function(modalData) {
+        // Update the modal options dynamically
+        var selectElement = document.getElementById("inlineFormCustomSelect");
+        selectElement.innerHTML = "";
+
+        if (modalData != null) {
+          modalData.forEach(function(ob) {
+            var option = document.createElement("option");
+            option.value = ob.name;
+            option.text = ob.name;
+            selectElement.appendChild(option);
+          });
+        }
+
+        // Display the modal
+        $('#myModal').modal('show');
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  });
+
+  // Function to fetch modal data from the backend
+  async function fetchModalData(dayInput, timeslotInput) {
+    try {
+      const response = await fetch('/dashboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ day: dayInput, timeSlot: timeslotInput })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return data.modalData;
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+</script>
+
 
     
 </body>

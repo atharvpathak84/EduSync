@@ -197,43 +197,77 @@ var dayInput1;
 var timeslotInput1;
 
 //finding teachers available from teacher dashboard
-app.post("/dashboard",async (req, res) => {
-  try{
+// app.post("/dashboard", async (req, res) => {
+//   try {
+//     const dayInput = req.body.day;
+//     const timeslotInput = req.body.timeSlot;
 
+//     await client.connect();
+//     const database = client.db('Login');
+//     const collection = database.collection('schedules');
+
+//     const data = await collection.find({
+//       [`lectures.${dayInput}.${timeslotInput}`]: {
+//         "$exists": true
+//       }
+//     }).toArray();
+
+//     console.log(data);
+//     res.json(data);
+//   } catch (e) {
+//     console.log(e);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+app.post("/dashboard", async function(req, res) {
+  try {
     const dayInput = req.body.day;
     const timeslotInput = req.body.timeSlot;
 
-     dayInput1 = req.body.day;
-     timeslotInput1 = req.body.timeSlot;
+    dayInput1 = dayInput;
+    timeslotInput1 = timeslotInput;
 
+    // Perform necessary operations with dayInput and timeslotInput
+
+    // Retrieve modal data from the backend
+    const modalData = await fetchModalData(dayInput, timeslotInput);
+
+    res.json({ modalData: modalData });
+  } catch (error) {
+    // Handle errors
+    console.log(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+// Function to fetch modal data based on dayInput and timeslotInput
+async function fetchModalData(dayInput, timeslotInput) {
+  try {
     await client.connect();
     const database = client.db('Login');
     const collection = database.collection('schedules');
 
-    //for teacher timetble
-    const database2 = client.db('Login');
-    const collection2 = database2.collection('schedules');
-    const data = await collection2.findOne({email:req.user.email});
+    const modalData = await collection.find({
+      [`lectures.${dayInput}.${timeslotInput}`]: {
+        "$exists": true
+      }
+    }).toArray();
 
-    const da = await collection.find({
-        [`lectures.${dayInput}.${timeslotInput}`]: {
-          "$exists": true
-        }
-      }).toArray();
-    
-    console.log(da);
-
-    res.render("teacher_dashboard.ejs",{name: req.user.email, timetable: data.lectures ,modalData : da})
-  } catch (e){
-    console.log(e);
+    // Return the modal data as an array of objects
+    return modalData;
+  } catch (error) {
+    // Handle errors
+    console.log(error);
+    return null;
   }
-});
+}
+
+
 
 // Routes
 app.post("/modalForm",async (req,res)=>{
   try{
     const chosenOption = req.body.inlineFormCustomSelect;
-    console.log(req.body)
     console.log('Chosen Option:', chosenOption);
 
     await client.connect();
@@ -285,8 +319,8 @@ app.get("/dashboard",async (req, res) => {
         const database = client.db('Login');
         const collection = database.collection('schedules');
         const data = await collection.findOne({email:req.user.email});
-
-        res.render("teacher_dashboard",{ name: req.user.email, timetable: data.lectures ,modalData : null})
+        
+        res.render("teacher_dashboard",{ name: data.name, timetable: data.lectures ,modalData : null})
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
