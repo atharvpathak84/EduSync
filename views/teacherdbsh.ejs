@@ -85,11 +85,17 @@
    
     </div>
     <div class="tetable"  ">
-      <% const currentDate=new Date(); %>
-      <% const options={ weekday: 'long' };%>
-        <% const currentDay=currentDate.toLocaleDateString('en-US',options).substring(0,3).toLowerCase(); %>
-          <% const currentDay2=currentDate.toLocaleDateString('en-US',options); %>
+      <% const currentDate=new Date(); %> 
+        <% const options={ weekday: 'long'}; %> 
+        <% var currentDay=currentDate.toLocaleDateString('en-US',options).substring(0,3).toLowerCase(); %> 
+        <% if((currentDay ==="sun")||(currentDay==="sat")) { %>
+          <% currentDay = "mon"; %>
+        <% } %>
 
+          <% const currentDay2=currentDate.toLocaleDateString('en-US',options); %>
+          <% if((currentDay2 ==="Sunday")||(currentDay2 ==="Saturday")) { %>
+            <% currentDay = "mon"; %>
+          <% } %>
             <table class="timetable table-dark w-75 mx-auto table-bordered "data-aos="zoom-in"">
               <tr>
                 <th colspan="2" class="text-center">

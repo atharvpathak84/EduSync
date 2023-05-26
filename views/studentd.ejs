@@ -82,9 +82,13 @@
       
       
       
-            <% const cDate=new Date(); %> 
+          <% const cDate=new Date(); %> 
           <% const opt={ weekday: 'long' };%> 
-          <% const currentDay2=cDate.toLocaleDateString('en-US',opt); %>
+          <% var currentDay2=cDate.toLocaleDateString('en-US',opt); %>
+          <% if((currentDay2 =="Sunday")||(currentDay2=="Saturday")) { %>
+            <% currentDay2 = "Monday"; %>
+          <% } %>
+          
       <table class="table-bordered w-75 mx-auto"  data-aos="zoom-in">
         <tr>
         <th colspan="2" class="days">
@@ -95,11 +99,15 @@
           <th class="time text-center text-justify">Time Slot</th>
           <th class="sub text-center">Subject</th>
         </tr>
-        <% const currentDate=new Date(); %> <% const options={ weekday: 'long'
-        }; %> <% const currentDay=currentDate.toLocaleDateString('en-US',
-        options).substring(0,3).toLowerCase(); %> <%
-        Object.keys(timetable[currentDay]).forEach((timeSlot)=> { %> <% if
-        (timetable[currentDay][timeSlot]==="BREAK" ) { %>
+        <% const currentDate=new Date(); %> 
+        <% const options={ weekday: 'long'}; %> 
+        <% var currentDay=currentDate.toLocaleDateString('en-US',options).substring(0,3).toLowerCase(); %> 
+        <% if((currentDay ==="sun")||(currentDay==="sat")) { %>
+          <% currentDay = "mon"; %>
+        <% } %>
+
+        <% Object.keys(timetable[currentDay]).forEach((timeSlot)=> { %> 
+        <% if (timetable[currentDay][timeSlot]==="BREAK" ) { %>
         <tr>
           <td class="text-center"><%= timeSlot %></td>
           <td class="text-center"><em>BREAK</em></td>
