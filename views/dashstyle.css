@@ -151,15 +151,15 @@ font-weight: 600;
      background-color: #55608f;
    }
  tr{
-   transition: all 0.01s ease-in;
-   cursor: pointer;
+   transition: all 0.2s ease-in;
+   cursor:pointer;
  }
  
  
    tr {
      &:hover {
        background-color: rgba(255,255,255,0.3);
-       transform: scale(1.08);
+       transform: scale(1.09);
        box-shadow: 2px 2px 2px rgba(0,0,0,0.2), -1px -1px 8px rgba(0,0,0,0.2)
      }
    }
