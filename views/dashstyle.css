@@ -1,0 +1,185 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+ *{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:'Poppins',sans-serif;
+
+ }
+
+ .classroom{
+    background-image: url('images/class2.jpg');
+    min-height: 100vh;
+ overflow-x: hidden;
+
+    /* Center and scale the image nicely */
+    
+    background-size: auto;
+    background-size: cover;
+
+ }
+ .roombg{
+ height: 183px;
+ }
+ header{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height: 100px;
+    padding: 10px 10px 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+ }
+ .navigation a
+ {
+text-decoration: none;
+color:#359381;
+padding:6px 15px;
+border-radius: 20px;
+margin: 0 10px;
+font-weight: 600;
+ }
+
+ .navigation a:hover,
+ .navigation a.active {
+    background: #359381;
+    color: #fff;
+ }
+
+ .parallax
+ {
+    position: relative;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
+
+ }
+ #text
+ {
+    position:absolute;
+    font-size: 3.5em;
+    color:hwb(0 100% 0%);
+    padding-top: 70px;
+    text-shadow: 2px 2px 4px rgb(0, 0, 0,.2);
+    padding-left: 510px;
+    padding-top: 200px;
+    font-weight:800;
+
+ }
+
+ .parallax img{
+    position: relative;
+    top:0;
+    left:0;
+    width:40%;
+    pointer-events: none;
+ }
+ 
+
+ .std2
+ {
+    padding-top: 100px;
+    padding-left: 220px;
+    height:550px;
+   
+
+    
+ }
+ .std1
+ {
+    padding-top: 120px;
+    padding-right: 180px;
+    height:480px;
+ }
+ .std3
+ {
+    padding-top: 120px;
+  height:500px;
+
+ }
+
+ .sec{
+    position: relative;
+    padding-top: 70px;
+    background: linear-gradient(45deg, #569896, #0d6ac7a2);
+  
+ }
+
+ 
+.container {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+ }
+ 
+ table {
+   width: 800px;
+   border-collapse: collapse;
+   overflow: hidden;
+   box-shadow: 0 0 20px rgba(0,0,0,0.1);
+ }
+ 
+ th{
+   color: #fff;
+   padding: 15px;
+   font-size:xx-large;
+   justify-content:center;
+   
+ }
+ td {
+   padding: 15px;
+   background-color: rgba(255,255,255,0.2);
+   color: #060606;
+   font-size: large;
+   font-style:normal;
+   font-weight:600;
+   
+
+ }
+ 
+ th {
+   text-align: center;
+ }
+ 
+ 
+   th {
+     background-color: #55608f;
+   }
+ tr{
+   transition: all 0.01s ease-in;
+   cursor: pointer;
+ }
+ 
+ 
+   tr {
+     &:hover {
+       background-color: rgba(255,255,255,0.3);
+       transform: scale(1.08);
+       box-shadow: 2px 2px 2px rgba(0,0,0,0.2), -1px -1px 8px rgba(0,0,0,0.2)
+     }
+   }
+   td {
+     position: relative;
+     &:hover {
+       &:before {
+         content: "";
+         position: absolute;
+         left: 0;
+         right: 0;
+         top: -9999px;
+         bottom: -9999px;
+         /* background-color: rgba(255,255,255,0.2); */
+         z-index: -1;
+       }
+     }
+   
+ }
+ .days
+ {
+   text-align: center;
+ }

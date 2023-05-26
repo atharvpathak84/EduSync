@@ -1,5 +1,16 @@
-html,
-body {
+ 
+table {
+  border-collapse: collapse;
+  width: 100%;
+} 
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+/* body {
   height: 100%;
 }
 
@@ -8,7 +19,7 @@ body {
   background: linear-gradient(45deg, #49a09d, #5f2c82);
   font-family: sans-serif;
   font-weight: 100;
-}
+} */
 
 .container {
   position: absolute;

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashstyle.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"/>
+      <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  </head>
+  <body>
+    <div class="classroom">
+      <header>
+        <a href="#" class="logo"><img src="images/newlogo5.png" /></a>
+        <nav class="navigation">
+          <a href="active">Home</a>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+          <a href="#" onclick="submitForm()">Logout</a>
+        </nav>
+      </header>
+      <h2 id="text">Welcome To SE11</h2>
+      <section class="parallax">
+        <img src="images/std2.png" class="std2" id="sd2" />
+        <img src="images/std3.png" class="std3" id="sd3" />
+
+        <img src="images/std1.png" class="std1" id="sd1" />
+       
+      </section>
+
+      <script src="script.js"></script>
+      <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+      <script>
+        AOS.init({
+            offset: 85,
+            duration: 1000,
+        });
+      </script>
+    </div>
+       <div class="baki">
+        
+        <img src="images/class2baki.jpg" class="roombg" />
+       
+
+       </div>
+
+
+    <section class="sec">
+        <div class="ttinfo" data-aos="flip-left" >
+          
+            <h2>Timetable</h2>
+            <p>
+              <img src="images/laptop.png" class="std0" id="sd0" />
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, quo! Non
+              illum delectus voluptatibus architecto molestiae accusamus maxime ullam
+              iure consequuntur unde reprehenderit, similique quis. Architecto
+              repellendus autem expedita harum quibusdam? Quia quas sint cum sapiente.
+              Eveniet soluta aut natus esse voluptates modi nemo quas porro magni
+              incidunt fugiat blanditiis consectetur nostrum iste enim sint voluptas
+              fugit a qui animi officiis nulla, sequi voluptate architecto? Ea
+              perspiciatis sint at veritatis quam dolorem pariatur totam alias nam
+              perferendis quasi obcaecati quae ipsum sequi dignissimos non saepe
+              debitis adipisci id rem, officiis sed eum reprehenderit ipsa? Doloremque
+              animi, adipisci necessitatibus rem nihil ratione odit et libero
+              voluptatibus totam iusto est, a architecto fuga recusandae officia
+              expedita dolorem dolorum exercitationem beatae quod! Quam, quod soluta
+              nostrum quo ad voluptas repellendus saepe ex expedita.
+              <br />
+              </p>
+            </div>
+
+ 
+           
+          
+
+            
+      
+      
+      
+            <% const cDate=new Date(); %> 
+          <% const opt={ weekday: 'long' };%> 
+          <% const currentDay2=cDate.toLocaleDateString('en-US',opt); %>
+      <table class="table-bordered w-75 mx-auto"  data-aos="zoom-in">
+        <tr>
+        <th colspan="2" class="days">
+          <%= currentDay2 %>
+         </th>
+        </tr>
+        <tr class="text-center">
+          <th class="time text-center text-justify">Time Slot</th>
+          <th class="sub text-center">Subject</th>
+        </tr>
+        <% const currentDate=new Date(); %> <% const options={ weekday: 'long'
+        }; %> <% const currentDay=currentDate.toLocaleDateString('en-US',
+        options).substring(0,3).toLowerCase(); %> <%
+        Object.keys(timetable[currentDay]).forEach((timeSlot)=> { %> <% if
+        (timetable[currentDay][timeSlot]==="BREAK" ) { %>
+        <tr>
+          <td class="text-center"><%= timeSlot %></td>
+          <td class="text-center"><em>BREAK</em></td>
+        </tr>
+        <% } else { %>
+        <tr>
+          <td class="text-center"><%= timeSlot %></td>
+          <td class="text-center">
+            <% if(timetable[currentDay][timeSlot].SUBJECT){ %> <%=
+            timetable[currentDay][timeSlot].SUBJECT %>
+            <br />
+            <%= timetable[currentDay][timeSlot].TEACHER %> <% } else { %> <%
+            Object.keys(timetable[currentDay][timeSlot]).forEach((batches)=> {
+            %> <%= batches %> <%= timetable[currentDay][timeSlot][batches] %>
+            <br />
+            <% }) %> <% } %>
+          </td>
+        </tr>
+        <% }; %> <% }) %>
+        
+      </table>
+      <div  class="tp" data-aos="slide-right">
+        <p>
+          <img src="images/books.png" class="std0" id="sd0" />
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, quo! Non
+          illum delectus voluptatibus architecto molestiae accusamus maxime ullam
+          iure consequuntur unde reprehenderit, similique quis. Architecto
+          repellendus autem expedita harum quibusdam? Quia quas sint cum sapiente.
+          Eveniet soluta aut natus esse voluptates modi nemo quas porro magni
+          incidunt fugiat blanditiis consectetur nostrum iste enim sint voluptas
+          fugit a qui animi officiis nulla, sequi voluptate architecto? Ea
+          perspiciatis sint at veritatis quam dolorem pariatur totam alias nam
+          perferendis quasi obcaecati quae ipsum sequi dignissimos non saepe
+          debitis adipisci id rem, officiis sed eum reprehenderit ipsa? Doloremque
+          animi, adipisci necessitatibus rem nihil ratione odit et libero
+          voluptatibus totam iusto est, a architecto fuga recusandae officia
+          expedita dolorem dolorum exercitationem beatae quod! Quam, quod soluta
+          nostrum quo ad voluptas repellendus saepe ex expedita.
+        </p>
+       
+        
+      </div>
+    </section>
+    <form action="/logout?_method=DELETE" method="POST" style="display:none;" id="myForm">
+      <button class="nav-link fw-bold py-1 px-0 btn p=3 btn-dark text-white" type="submit"  >Logout</button>
+  
+    </form>
+    <footer class="mt-auto text-dark-50">
+      <p class="text-dark">
+        EduSync <a href="" class="text-dark">Copyright</a>
+      </p>
+    </footer>
+    <script>
+      function submitForm() {
+        // Get the form element
+        var form = document.getElementById("myForm");
+        // Submit the form
+        form.submit();
+      }
+    </script>
+  </body>
+</html>
