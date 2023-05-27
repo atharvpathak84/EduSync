@@ -53,25 +53,22 @@
     <section class="sec">
         <div class="ttinfo" data-aos="flip-left" >
           
-            <h2>Timetable</h2>
-            <p>
-              <img src="images/laptop.png" class="std0" id="sd0" />
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, quo! Non
-              illum delectus voluptatibus architecto molestiae accusamus maxime ullam
-              iure consequuntur unde reprehenderit, similique quis. Architecto
-              repellendus autem expedita harum quibusdam? Quia quas sint cum sapiente.
-              Eveniet soluta aut natus esse voluptates modi nemo quas porro magni
-              incidunt fugiat blanditiis consectetur nostrum iste enim sint voluptas
-              fugit a qui animi officiis nulla, sequi voluptate architecto? Ea
-              perspiciatis sint at veritatis quam dolorem pariatur totam alias nam
-              perferendis quasi obcaecati quae ipsum sequi dignissimos non saepe
-              debitis adipisci id rem, officiis sed eum reprehenderit ipsa? Doloremque
-              animi, adipisci necessitatibus rem nihil ratione odit et libero
-              voluptatibus totam iusto est, a architecto fuga recusandae officia
-              expedita dolorem dolorum exercitationem beatae quod! Quam, quod soluta
-              nostrum quo ad voluptas repellendus saepe ex expedita.
-              <br />
-              </p>
+            
+            
+              <img src="images/laptop.png" class="std0" id="sd0"  data-aos="slide-left" />
+          
+                <a href="#" class="box">
+                  <h3><span>Breaking news -</span> hippos are sorta dangerous</h3>
+                  <h2>Tonight at nine</h2>
+                </a>
+                <a href="#" class="box">
+                  <h2><span>Lunch -</span> is delicious anytime</h2>
+                  <h3>Even after dinner</h3>
+                </a>
+          
+              
+              
+              
             </div>
 
  
@@ -82,70 +79,66 @@
       
       
       
-          <% const cDate=new Date(); %> 
+            <% const cDate=new Date(); %> 
           <% const opt={ weekday: 'long' };%> 
           <% var currentDay2=cDate.toLocaleDateString('en-US',opt); %>
-          <% if((currentDay2 =="Sunday")||(currentDay2=="Saturday")) { %>
-            <% currentDay2 = "Monday"; %>
-          <% } %>
-          
-      <table class="table-bordered w-75 mx-auto"  data-aos="zoom-in">
-        <tr>
-        <th colspan="2" class="days">
-          <%= currentDay2 %>
-         </th>
-        </tr>
-        <tr class="text-center">
-          <th class="time text-center text-justify">Time Slot</th>
-          <th class="sub text-center">Subject</th>
-        </tr>
-        <% const currentDate=new Date(); %> 
-        <% const options={ weekday: 'long'}; %> 
-        <% var currentDay=currentDate.toLocaleDateString('en-US',options).substring(0,3).toLowerCase(); %> 
-        <% if((currentDay ==="sun")||(currentDay==="sat")) { %>
-          <% currentDay = "mon"; %>
-        <% } %>
-
-        <% Object.keys(timetable[currentDay]).forEach((timeSlot)=> { %> 
-        <% if (timetable[currentDay][timeSlot]==="BREAK" ) { %>
-        <tr>
-          <td class="text-center"><%= timeSlot %></td>
-          <td class="text-center"><em>BREAK</em></td>
-        </tr>
-        <% } else { %>
-        <tr>
-          <td class="text-center"><%= timeSlot %></td>
-          <td class="text-center">
-            <% if(timetable[currentDay][timeSlot].SUBJECT){ %> <%=
-            timetable[currentDay][timeSlot].SUBJECT %>
-            <br />
-            <%= timetable[currentDay][timeSlot].TEACHER %> <% } else { %> <%
-            Object.keys(timetable[currentDay][timeSlot]).forEach((batches)=> {
-            %> <%= batches %> <%= timetable[currentDay][timeSlot][batches] %>
-            <br />
-            <% }) %> <% } %>
-          </td>
-        </tr>
-        <% }; %> <% }) %>
         
-      </table>
+          <% var currentDay=cDate.toLocaleDateString('en-US',opt).substring(0,3).toLowerCase(); %> 
+          <% if((currentDay ==="sun")||(currentDay==="sat")) { %>
+            <% currentDay = "mon"; %>
+            <% currentDay2 = "Monday" %>
+          <% } %>
+          <table class="table-bordered w-75 mx-auto"  data-aos="zoom-in">
+            <tr>
+            <th colspan="2" class="days">
+              <%= currentDay2 %>
+             </th>
+            </tr>
+            <tr class="text-center">
+              <th class="time text-center text-justify">Time Slot</th>
+              <th class="sub text-center">Subject</th>
+            </tr>
+            
+    
+            <% Object.keys(timetable[currentDay]).forEach((timeSlot)=> { %> 
+            <% if (timetable[currentDay][timeSlot]==="BREAK" ) { %>
+            <tr>
+              <td class="text-center"><%= timeSlot %></td>
+              <td class="text-center"><em>BREAK</em></td>
+            </tr>
+            <% } else { %>
+            <tr>
+              <td class="text-center"><%= timeSlot %></td>
+              <td class="text-center">
+                <% if(timetable[currentDay][timeSlot].SUBJECT){ %> <%=
+                timetable[currentDay][timeSlot].SUBJECT %>
+                <br />
+                <%= timetable[currentDay][timeSlot].TEACHER %> <% } else { %> <%
+                Object.keys(timetable[currentDay][timeSlot]).forEach((batches)=> {
+                %> <%= batches %> <%= timetable[currentDay][timeSlot][batches] %>
+                <br />
+                <% }) %> <% } %>
+              </td>
+            </tr>
+            <% }; %> <% }) %>
+            
+          </table>
       <div  class="tp" data-aos="slide-right">
-        <p>
-          <img src="images/books.png" class="std0" id="sd0" />
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, quo! Non
-          illum delectus voluptatibus architecto molestiae accusamus maxime ullam
-          iure consequuntur unde reprehenderit, similique quis. Architecto
-          repellendus autem expedita harum quibusdam? Quia quas sint cum sapiente.
-          Eveniet soluta aut natus esse voluptates modi nemo quas porro magni
-          incidunt fugiat blanditiis consectetur nostrum iste enim sint voluptas
-          fugit a qui animi officiis nulla, sequi voluptate architecto? Ea
-          perspiciatis sint at veritatis quam dolorem pariatur totam alias nam
-          perferendis quasi obcaecati quae ipsum sequi dignissimos non saepe
-          debitis adipisci id rem, officiis sed eum reprehenderit ipsa? Doloremque
-          animi, adipisci necessitatibus rem nihil ratione odit et libero
-          voluptatibus totam iusto est, a architecto fuga recusandae officia
-          expedita dolorem dolorum exercitationem beatae quod! Quam, quod soluta
-          nostrum quo ad voluptas repellendus saepe ex expedita.
+        
+          
+          <div class="new2">
+            <a href="#" class="box">
+              <h3><span>Breaking news -</span> hippos are sorta dangerous</h3>
+              <h2>checkout updates</h2>
+            </a>
+            <a href="#" class="box">
+              <h2><span>Lunch -</span> is delicious anytime</h2>
+              <h3>View Schedules</h3>
+            </a>
+            <img src="images/books.png" class="std9" id="sd0" data-aos="slide-up"/>
+          </div>
+          
+    
         </p>
        
         

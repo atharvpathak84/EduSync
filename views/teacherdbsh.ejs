@@ -12,6 +12,7 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"/>
       <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+      
 </head>
 <body>
     <div class="staffroom">
@@ -29,27 +30,45 @@
           </header>
           <h2 id="text">Welcome To Staffroom</h2>
 
-      <section class="parallax">
-       
-   
-      </section>
+        
+         
+    </div>
+
+    <div class="intro"data-aos="zoom-out-down">
+      <h1 class="text-light center "  >Hello <%= name %>
+      </h1>
+      <p class="lead text-light"   >Welcome to Teacher Dashboard</p>
+
+      
+
+
+<!-- 
+  <a href="#" class="box">
+    <h3><span>Breaking news -</span> hippos are sorta dangerous</h3>
+    <h2>Tonight at nine</h2>
+  </a>
+  <a href="#" class="box">
+    <h2><span>Lunch -</span> is delicious anytime</h2>
+    <h3>Even after dinner</h3>
+  </a> -->
 
     </div>
+
+
+
+
     <div class="function">
       
       <main class="main px-3">
         
-        <div class="intro">
-          <h1 class="text-dark"  data-aos="zoom-in">Hello <%= name %>
-          </h1>
-          <p class="lead text-dark"   data-aos="zoom-in">Welcome to Teacher Dashboard</p>
-        </div>
+    
         
-        <div class="entry">
+        <div class="entry p-15">
           <img src="images/time.png" class="hand"   data-aos="slide-right">
           <div class="info" data-aos="zoom-in">
-            <form method="POST" action="/dashboard" class="form-control" id="findSubsForm">
-              <label for="day">Day:</label>
+            <form method="POST" action="/dashboard" class="form-control bg-gradient-warning w-100 h-75  pt-2 px-10 py-10 text-center" id="findSubsForm">
+              <label for="day" class="din">Day :</label>
+              <br>
               <select id="day" name="day">
                 <!-- Options for days -->
                 <option value="mon">Monday</option>
@@ -59,7 +78,8 @@
               <option value="fri">Friday</option>
               </select><br /><br />
             
-              <label for="timeSlot">Timeslot:</label>
+              <label for="timeSlot" class="ts">Timeslot:</label>
+              <br>
               <select id="timeSlot" name="timeSlot">
                 <!-- Options for timeslots -->
                 <option value="9-10 AM">9-10 AM</option>
@@ -69,7 +89,7 @@
               <option value="2:15-4:15 PM">2:15-4:15 PM</option>
               </select><br /><br />
             
-              <button type="submit" class="btn btn-dark" id="findSubstitutionsBtn">Find Substitutions</button>
+              <button type="submit" class="btn" id="findSubstitutionsBtn">Find Substitutions</button>
             </form>
            
         </div>
@@ -84,39 +104,50 @@
      
    
     </div>
-    <div class="tetable"  ">
-      <% const currentDate=new Date(); %> 
-        <% const options={ weekday: 'long'}; %> 
-        <% var currentDay=currentDate.toLocaleDateString('en-US',options).substring(0,3).toLowerCase(); %> 
-        <% if((currentDay ==="sun")||(currentDay==="sat")) { %>
-          <% currentDay = "mon"; %>
-        <% } %>
 
-          <% const currentDay2=currentDate.toLocaleDateString('en-US',options); %>
-          <% if((currentDay2 ==="Sunday")||(currentDay2 ==="Saturday")) { %>
-            <% currentDay = "mon"; %>
-          <% } %>
-            <table class="timetable table-dark w-75 mx-auto table-bordered "data-aos="zoom-in"">
-              <tr>
-                <th colspan="2" class="text-center">
-                  <%= currentDay2 %>
-                </th>
-              </tr>
-              <tr class="text-center">
-                <th class="time text-center text-justify">Time Slot</th>
-                <th class="sub text-center">Lecture</th>
-              </tr>
-              <% Object.keys(timetable[currentDay]).forEach((timeSlot)=> { %>
-                <tr>
-                  <td>
-                    <%= timeSlot %>
-                  </td>
-                  <td>
-                    <%= timetable[currentDay][timeSlot] %>
-                  </td>
-                </tr>
-                <% }) %>
-            </table>
+        
+
+<!-- 
+    <div class="tetable">
+      <% const currentDate=new Date(); %>
+      <% const options={ weekday: 'long' };%>
+        <% const currentDay=currentDate.toLocaleDateString('en-US',options).substring(0,3).toLowerCase(); %>
+          <% const currentDay2=currentDate.toLocaleDateString('en-US',options); %> -->
+          <div class="tetable">
+            <% const currDate=new Date(); %> 
+            <% const option={ weekday: 'long'}; %> 
+            <% var ctDay=currDate.toLocaleDateString('en-US',option).substring(0,3).toLowerCase(); %> 
+            
+            <% if((ctDay ==="sun")||(ctDay==="sat")) { %>
+              <% ctDay = "mon"; %>
+            <% } %>
+      
+            <% var ctDay2=currDate.toLocaleDateString('en-US',option); %>
+            <% if((ctDay2 ==="Sunday")||(ctDay2 ==="Saturday")) { %>
+              <% ctDay2 = "Monday"; %>
+            <% } %>
+                  <table class="timetable table-dark w-75 mx-auto table-bordered "data-aos="zoom-in"">
+                    <tr>
+                      <th colspan="2" class="text-center">
+                        <%= ctDay2 %>
+                      </th>
+                    </tr>
+                    <tr class="text-center">
+                      <th class="time text-center text-justify">Time Slot</th>
+                      <th class="sub text-center">Lecture</th>
+                    </tr>
+                    <% Object.keys(timetable[ctDay]).forEach((timeSlot)=> { %>
+                      <tr>
+                        <td>
+                          <%= timeSlot %>
+                        </td>
+                        <td>
+                          <%= timetable[ctDay][timeSlot] %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </table>
+    
 
    
 
